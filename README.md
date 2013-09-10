@@ -8,12 +8,10 @@ in a [Docker](http://www.docker.io) container.
 **Note about open file limits**: You'll need to increase the number of open
 files available to Couchbase Server from the Docker host.
 
-To do so, edit `/etc/init/docker.conf` on the Docker host machine, and add the
-following line right after the *description* line:
+To do so, edit `/etc/init/docker.conf` on the Docker host machine, and append
+the following line to the end of the file:
 
-```
-limit nofile 262144 262144
-```
+    limit nofile 262144 262144
 
 Then, add the following entries to `/etc/security/limits.conf`
 
