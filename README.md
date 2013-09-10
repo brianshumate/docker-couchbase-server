@@ -6,7 +6,7 @@ in a [Docker](http://www.docker.io) container.
 ## Prepare Docker Host
 
 **Note about open file limits**: You'll need to increase the number of open
-files available to Couchbase Server from the Docker host.
+files available to Couchbase Server containers from the Docker host.
 
 To do so, edit `/etc/init/docker.conf` on the Docker host machine, and append
 the following line to the end of the file:
