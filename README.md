@@ -1,41 +1,42 @@
-docker-couchbase-server
-=======================
+# docker-couchbase-server
 
-Dockerfile for [Couchbase Server](http://couchbase.com/) for use with 
-[Docker](http://www.docker.io)
+This is a Dockerfile for running [Couchbase Server](http://couchbase.com/)
+in a [Docker](http://www.docker.io) container.
+
+## Prepare Docker Host
 
 **Note about open file limits**: You'll need to increase the number of open
-files available to Couchbase Server. The simplest way to do so with Docker is
-to edit `/etc/init/docker.conf` on the Docker host machine, and add the
+files available to Couchbase Server from the Docker host.
+
+To do so, edit `/etc/init/docker.conf` on the Docker host machine, and add the
 following line right after the *description* line:
 
 ```
 limit nofile 262144 262144
 ```
 
-In the Docker host, add the following to `/etc/security/limits.conf`:
+Then, add the following entries to `/etc/security/limits.conf`
 
-```
-*                soft    nofile          262144 
-*                hard    nofile          262144
-```
+    *    hard    nofile    262144
+    *    soft    nofile    262144
 
-Then add the following line to `/etc/pam.d/common-session` before the end
-of file:
+Finally, add the following line to `/etc/pam.d/common-session`:
 
-```
-session required        pam_limits.so
-```
+    session	required	pam_limits.so
 
-Build a Couchbase Server Docker image:
+You'll need to restart the Docker host after making the above changes.
+
+## Build & Launch Docker Container
+
+Build a Couchbase Server Docker container:
 
     cd docker-couchbase-server
     sudo docker build -t="couchbase-server" .
 
-Run and attach to the image:
+Run and attach to the container:
 
     sudo docker run -i -t couchbase-server
 
-Or, run image the background
+Or, run container the background
 
     sudo docker run -d couchbase-server

@@ -2,15 +2,21 @@
 #
 # Currently installs Couchbase Server Community Edition version 2.0.1
 #
-# VERSION 0.1
+# VERSION 0.2
 
 FROM ubuntu
 MAINTAINER Brian Shumate, brian@couchbase.com
+USER couchbase
 
 ENV CB_DOWNLOAD_URL http://packages.couchbase.com/releases
 ENV CB_VERSION 2.0.1
 ENV CB_PACKAGE couchbase-server-community_x86_64_$CB_VERSION.deb
 ENV UNIVERSE_URL deb http://us.archive.ubuntu.com/ubuntu/ precise universe
+
+# Limits
+RUN echo "* hard nofile 262144" >> /etc/security/limits.conf
+RUN echo "* soft nofile 262144" >> /etc/security/limits.conf
+RUN echo "session	required	pam_limits.so" >> /etc/pam.d/common-session
 
 # Add Universe (for libssl0.9.8), update & install packages
 RUN echo $UNIVERSE_URL >> /etc/apt/sources.list
