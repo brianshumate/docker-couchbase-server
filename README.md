@@ -33,8 +33,10 @@ Build a Couchbase Server Docker container:
 
 Run and attach to the container:
 
-    sudo docker run -i -t couchbase-server
+FIXME: Need a better executable/ENTRYPOINT in these examples here
+
+    sudo docker run -i -t couchbase-server /bin/bash
 
 Or, run container the background
 
-    sudo docker run -d couchbase-server
+    sudo docker run -d couchbase-server FIXME
