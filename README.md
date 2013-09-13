@@ -11,32 +11,42 @@ files available to Couchbase Server containers from the Docker host.
 To do so, edit `/etc/init/docker.conf` on the Docker host machine, and append
 the following line to the end of the file:
 
-    limit nofile 262144 262144
+```
+limit nofile 262144 262144
+```
 
 Then, add the following entries to `/etc/security/limits.conf`
 
-    *    hard    nofile    262144
-    *    soft    nofile    262144
+```
+*    hard    nofile    262144
+*    soft    nofile    262144
+```
 
 Finally, add the following line to `/etc/pam.d/common-session`:
 
-    session	required	pam_limits.so
+```
+session	required	pam_limits.so
+```
 
 You'll need to restart the Docker host after making the above changes.
 
-## Build & Launch Docker Container
+## Build & Launch Docker Image
 
-Build a Couchbase Server Docker container:
+Build a Couchbase Server Docker image:
 
-    cd docker-couchbase-server
-    sudo docker build -t="couchbase-server" .
+```
+cd docker-couchbase-server
+sudo docker build -t "<yourname>/couchbase-server" .
+```
+  
+You can now run and attach to the image:
 
-Run and attach to the container:
+```
+sudo docker run -i -t <yourname>/couchbase-server
+``` 
 
-FIXME: Need a better executable/ENTRYPOINT in these examples here
+If you prefer, you can also run image the background:
 
-    sudo docker run -i -t couchbase-server /bin/bash
-
-Or, run container the background
-
-    sudo docker run -d couchbase-server FIXME
+```
+sudo docker run -d <yourname>/couchbase-server
+```
