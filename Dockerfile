@@ -12,16 +12,18 @@ ENV CB_DOWNLOAD_URL http://packages.couchbase.com/releases
 ENV CB_PACKAGE couchbase-server-community_x86_64_$CB_VERSION.deb
 
 # Limits
-RUN sed -i.bak '/\# End of file/ i\\*                hard    nofile            262144' /etc/security/limits.conf
-RUN sed -i.bak '/\# End of file/ i\\*                soft    nofile            262144' /etc/security/limits.conf
-RUN sed -i.bak '/\# end of pam-auth-update config/ i\session	required        pam_limits.so' /etc/pam.d/common-session
+RUN sed -i.bak '/\# End of file/ i\\# Following 2 lines added by docker-couchbase-server' /etc/security/limits.conf
+RUN sed -i.bak '/\# End of file/ i\\*                hard    nofile          262144' /etc/security/limits.conf
+RUN sed -i.bak '/\# End of file/ i\\*                soft    nofile          262144\n' /etc/security/limits.conf
+RUN sed -i.bak '/\# end of pam-auth-update config/ i\\# Following line was added by docker-couchbase-server' /etc/pam.d/common-session
+RUN sed -i.bak '/\# end of pam-auth-update config/ i\session	required        pam_limits.so\n' /etc/pam.d/common-session
   
 # Locale and supporting utility commands
 RUN locale-gen en_US en_US.UTF-8
 RUN echo 'root:couchbase' | chpasswd
 RUN mkdir -p /var/run/sshd
 RUN mkdir -p /var/log/supervisor
-#ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Add Universe (for libssl0.9.8 dependency), update & install packages
 RUN sed -i.bak 's/main$/main universe/' /etc/apt/sources.list
@@ -44,8 +46,5 @@ EXPOSE 4369 8091 8092 11209 11210 11211 21100 21101 21102 21103 21104 21105 2110
 RUN dpkg-divert --local --rename --add /sbin/initctl
 RUN ln -s /bin/true /sbin/initctl
 
-#USER couchbase
-
 # Start the supervisord process, thereby also starting Couchbase Server & sshd
-#CMD ["/usr/bin/supervisord"]
-CMD ["/bin/bash"]
+CMD ["/usr/bin/supervisord"]
