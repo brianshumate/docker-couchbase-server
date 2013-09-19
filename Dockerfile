@@ -2,7 +2,7 @@
 #
 # Install Couchbase Server Community Edition (version as per CB_VERSION below)
 #
-# VERSION 0.8.5
+# VERSION 0.8.7
 
 FROM ubuntu
 MAINTAINER Brian Shumate, brian@couchbase.com
@@ -34,19 +34,11 @@ RUN apt-get -y install librtmp0 libssl0.9.8 lsb-release openssh-server
 # Download Couchbase Server package to /tmp, install & stop service
 ADD $CB_DOWNLOAD_URL/$CB_VERSION/$CB_PACKAGE /tmp/$CB_PACKAGE
 RUN dpkg -i /tmp/$CB_PACKAGE
-RUN /etc/init.d/couchbase-server stop
+# RUN /etc/init.d/couchbase-server stop
 
 # Open the OpenSSH server and Couchbase Server ports
-# Ugly now due to no range, but it's in the works for Docker version 0.8
-# See: https://github.com/dotcloud/docker/issues/1834
-# Soon, it can look like the following commented version, instead:
-# EXPOSE 4369 8091 8092 11209 11210 11211 21100-21199
-EXPOSE 4369 8091 8092 11209 11210 11211 21100 21101 21102 21103 21104 21105 21106 21107 21108 21109 21110 21111 21112 21113 21114 21115 21116 21117 21118 21119 21120 21121 21122 21123 21124 21125 21126 21127 21128 21129 21130 21131 21132 21133 21134 21135 21136 21137 21138 21139 21140 21141 21142 21143 21144 21145 21146 21147 21148 21149 21150 21151 21152 21153 21154 21155 21156 21157 21158 21159 21160 21161 21162 21163 21164 21165 21166 21167 21168 21169 21170 21171 21172 21173 21174 21175 21176 21177 21178 21179 21180 21181 21182 21183 21184 21185 21186 21187 21188 21189 21190 21191 21192 21193 21194 21195 21196 21197 21198 21199
-
-# The initctl workaround
-# See: https://github.com/dotcloud/docker/issues/1024
-RUN dpkg-divert --local --rename --add /sbin/initctl
-RUN ln -s /bin/true /sbin/initctl
+# EXPOSE 22 4369 8091 8092 11209 11210 11211 21100-21199 # in v0.08 if needed
+EXPOSE 22 4369 8091 8092 11209 11210 11211
 
 # couchbase-script approach (thanks for the idea Dustin!)
 RUN rm -r /opt/couchbase/var/lib
@@ -54,13 +46,14 @@ ADD couchbase-script /usr/local/sbin/couchbase
 RUN chmod 755 /usr/local/sbin/couchbase
 CMD /usr/local/sbin/couchbase
 
+##############################################################################
 # The following bits are for using Couchbase Server with supervisord instead
-
+# Note: WIP
+##############################################################################
 # ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # RUN apt-get -y install supervisor
 # Stop supervisord
 # RUN /etc/init.d/supervisor stop
-
 # Start the supervisord process, thereby also starting Couchbase Server & sshd
 # Still working on this; works fine from a shell, but doesn't want to stay
 # up on boot
