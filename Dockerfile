@@ -2,7 +2,7 @@
 #
 # Install Couchbase Server Community Edition (version as per CB_VERSION below)
 #
-# VERSION 0.8.4
+# VERSION 0.8.5
 
 FROM ubuntu
 MAINTAINER Brian Shumate, brian@couchbase.com
@@ -12,9 +12,11 @@ ENV CB_DOWNLOAD_URL http://packages.couchbase.com/releases
 ENV CB_PACKAGE couchbase-server-community_x86_64_$CB_VERSION.deb
 
 # Limits
-RUN sed -i.bak '/\# End of file/ i\\# Following 2 lines added by docker-couchbase-server' /etc/security/limits.conf
-RUN sed -i.bak '/\# End of file/ i\\*                hard    nofile          262144' /etc/security/limits.conf
-RUN sed -i.bak '/\# End of file/ i\\*                soft    nofile          262144\n' /etc/security/limits.conf
+RUN sed -i.bak '/\# End of file/ i\\# Following 4 lines added by docker-couchbase-server' /etc/security/limits.conf
+RUN sed -i.bak '/\# End of file/ i\\*                hard    memlock          unlimited' /etc/security/limits.conf
+RUN sed -i.bak '/\# End of file/ i\\*                soft    memlock         unlimited\n' /etc/security/limits.conf
+RUN sed -i.bak '/\# End of file/ i\\*                hard    nofile          65536' /etc/security/limits.conf
+RUN sed -i.bak '/\# End of file/ i\\*                soft    nofile          65536\n' /etc/security/limits.conf 
 RUN sed -i.bak '/\# end of pam-auth-update config/ i\\# Following line was added by docker-couchbase-server' /etc/pam.d/common-session
 RUN sed -i.bak '/\# end of pam-auth-update config/ i\session	required        pam_limits.so\n' /etc/pam.d/common-session
   
