@@ -12,14 +12,17 @@ To do so, edit `/etc/init/docker.conf` on the Docker host machine, and append
 the following line to the end of the file:
 
 ```
+limit memlock unlimited unlimited
 limit nofile 262144 262144
 ```
 
 Then, add the following entries to `/etc/security/limits.conf`
 
 ```
-*    hard    nofile    262144
-*    soft    nofile    262144
+*    hard    memlock   unlimited
+*    soft    memlock   unlimited
+*    hard    nofile    65536
+*    soft    nofile    65536
 ```
 
 Finally, add the following line to `/etc/pam.d/common-session`:
