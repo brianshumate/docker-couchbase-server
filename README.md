@@ -30,23 +30,21 @@ session	required	pam_limits.so
 
 You'll need to restart the Docker host after making the above changes.
 
-## Build & Launch Docker Image
+## Build & Run Image
 
-Build a Couchbase Server Docker image:
+Now you can build and run Couchbase Server Docker image; be sure to replace
+`<yourname>` in the example shown below with your own unique identifier.
 
-```
-cd docker-couchbase-server
-sudo docker build -t "<yourname>/couchbase-server" .
-```
-  
-You can now run and attach to the image:
+Prepare home directory:
 
 ```
-sudo docker run -i -t <yourname>/couchbase-server
+mkdir -p /home/couchbase-server
+sudo chown 999:999 /home/couchbase-server
+```
+
+Build and run the image:
+
 ``` 
-
-If you prefer, you can also run image the background:
-
-```
-sudo docker run -d <yourname>/couchbase-server
+exec sudo docker run -i -d -t -v /home/couchbase-server:/opt/couchbase/var \
+-p 11210:11210 -p 8091:8091 -p 8092:8092 <yourname>/couchbase-server
 ```

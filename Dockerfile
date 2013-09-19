@@ -2,7 +2,7 @@
 #
 # Install Couchbase Server Community Edition (version as per CB_VERSION below)
 #
-# VERSION 0.8.1
+# VERSION 0.8.2
 
 FROM ubuntu
 MAINTAINER Brian Shumate, brian@couchbase.com
@@ -23,18 +23,19 @@ RUN locale-gen en_US en_US.UTF-8
 RUN echo 'root:couchbase' | chpasswd
 RUN mkdir -p /var/run/sshd
 RUN mkdir -p /var/log/supervisor
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Remove lib dir
+RUN rm -r /opt/couchbase/var/lib
 
 # Add Universe (for libssl0.9.8 dependency), update & install packages
 RUN sed -i.bak 's/main$/main universe/' /etc/apt/sources.list
 RUN apt-get -y update
-RUN apt-get -y install curl libssl0.9.8 lsb-release openssh-server supervisor
+RUN apt-get -y install librtmp0 libssl0.9.8 lsb-release openssh-server
 
-# Download the Couchbase Server package
-RUN curl -o /tmp/$CB_PACKAGE $CB_DOWNLOAD_URL/$CB_VERSION/$CB_PACKAGE
-
-# Install the Couchbase Server package
+# Download Couchbase Server package to /tmp, install & stop service
+ADD $CB_DOWNLOAD_URL/$CB_VERSION/$CB_PACKAGE /tmp/$CB_PACKAGE
 RUN dpkg -i /tmp/$CB_PACKAGE
+RUN /etc/init.d/couchbase-server stop
 
 # Open the OpenSSH server and Couchbase Server ports
 # Ugly now due to no range, but it's in the works for Docker version 0.8
@@ -46,8 +47,19 @@ EXPOSE 4369 8091 8092 11209 11210 11211 21100 21101 21102 21103 21104 21105 2110
 RUN dpkg-divert --local --rename --add /sbin/initctl
 RUN ln -s /bin/true /sbin/initctl
 
+# couchbase-script approach (thanks for the idea Dustin!)
+ADD couchbase-script /usr/local/sbin/couchbase
+RUN chmod 755 /usr/local/sbin/couchbase
+CMD /usr/local/sbin/couchbase
+
+# The following bits are for using Couchbase Server with supervisord instead
+
+# ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+# RUN apt-get -y install supervisor
+# Stop supervisord
+# RUN /etc/init.d/supervisor stop
+
 # Start the supervisord process, thereby also starting Couchbase Server & sshd
 # Still working on this; works fine from a shell, but doesn't want to stay
 # up on boot
-CMD ["/usr/bin/supervisord"]
-CMD ["/bin/bash"]
+# CMD ["/usr/bin/supervisord"]
