@@ -2,7 +2,7 @@
 #
 # Install Couchbase Server Community Edition (version as per CB_VERSION below)
 #
-# VERSION 0.8.3
+# VERSION 0.8.4
 
 FROM ubuntu
 MAINTAINER Brian Shumate, brian@couchbase.com
@@ -23,9 +23,6 @@ RUN locale-gen en_US en_US.UTF-8
 RUN echo 'root:couchbase' | chpasswd
 RUN mkdir -p /var/run/sshd
 RUN mkdir -p /var/log/supervisor
-
-# Remove lib dir
-RUN rm -r /opt/couchbase/var/lib
 
 # Add Universe (for libssl0.9.8 dependency), update & install packages
 RUN sed -i.bak 's/main$/main universe/' /etc/apt/sources.list
@@ -50,6 +47,7 @@ RUN dpkg-divert --local --rename --add /sbin/initctl
 RUN ln -s /bin/true /sbin/initctl
 
 # couchbase-script approach (thanks for the idea Dustin!)
+RUN rm -r /opt/couchbase/var/lib
 ADD couchbase-script /usr/local/sbin/couchbase
 RUN chmod 755 /usr/local/sbin/couchbase
 CMD /usr/local/sbin/couchbase

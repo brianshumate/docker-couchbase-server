@@ -30,23 +30,30 @@ session	required	pam_limits.so
 
 You'll need to restart the Docker host after making the above changes.
 
-Prior to building and running the image, you'll need to prepare a directory
-on the Docker host for mapping the Couchbase Server data directory if you
-wish to preserve your data through restarts of the image.
+Prior to building and running the container, you'll need to prepare a
+directory on the Docker host for mapping the Couchbase Server data
+directory if you wish to preserve your data through restarts of the image.
 
 ```
-mkdir -p /home/couchbase-server
+sudo mkdir /home/couchbase-server
 sudo chown 999:999 /home/couchbase-server
 ```
 
-## Build & Run Image
+## Build & Run Container
 
-Now you can build and run Couchbase Server Docker image; be sure to replace
-`<yourname>` in the example shown below with your own unique identifier.
+Now you can build and run Couchbase Server Docker container; be sure to
+replace `<yourname>` in the example shown below with your own unique
+identifier.
 
-Use a command like the following to build and run the image:
+The following command will build the container:
+
+```
+sudo docker build -t <yournmae>/couchbase-server .
+```
+
+Use a command like the following run the container:
   
 ``` 
-exec sudo docker run -i -d -t -v /home/couchbase-server:/opt/couchbase/var \
+sudo docker run -i -t -v /home/couchbase-server:/opt/couchbase/var \
 -p 11210:11210 -p 8091:8091 -p 8092:8092 <yourname>/couchbase-server
 ```
