@@ -42,9 +42,9 @@ sudo mkdir /home/couchbase-server
 sudo chown 999:999 /home/couchbase-server
 ```
 
-## Build & Run Container
+## Build & Run a Container
 
-Now you can build and run Couchbase Server Docker container; be sure to
+Now you can build and run a Couchbase Server Docker container; be sure to
 replace `<yourname>` in the example shown below with your own unique
 identifier.
 
@@ -58,5 +58,12 @@ Use a command like the following run the container:
   
 ``` 
 sudo docker run -i -t -v /home/couchbase-server:/opt/couchbase/var \
+-p 11210:11210 -p 8091:8091 -p 8092:8092 <yourname>/couchbase-server
+```
+
+or, if you prefer to have the container run in the background:
+
+``` 
+sudo docker run -i -t -d -v /home/couchbase-server:/opt/couchbase/var \
 -p 11210:11210 -p 8091:8091 -p 8092:8092 <yourname>/couchbase-server
 ```
