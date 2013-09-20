@@ -2,12 +2,12 @@
 #
 # Install Couchbase Server Community Edition (version as per CB_VERSION below)
 #
-# VERSION 0.8.7
+# VERSION 0.8.8
 
 FROM ubuntu
 MAINTAINER Brian Shumate, brian@couchbase.com
 
-ENV CB_VERSION 2.0.1
+ENV CB_VERSION 2.1.1
 ENV CB_DOWNLOAD_URL http://packages.couchbase.com/releases
 ENV CB_PACKAGE couchbase-server-community_x86_64_$CB_VERSION.deb
 
