@@ -46,19 +46,20 @@ identifier.
 The following command will build the container:
 
 ```
+cd docker-couchbase-server
 sudo docker build -t <yournmae>/couchbase-server .
 ```
 
 A command like the following is used to run the container:
   
 ``` 
-sudo docker run -i -t -v /home/couchbase-server:/opt/couchbase/var \
--p 11210:11210 -p 8091:8091 -p 8092:8092 <yourname>/couchbase-server
+sudo docker run -i -t  -p 11210:11210 -p 8091:8091 -p 8092:8092 \
+<yourname>/couchbase-server
 ```
 
 or, if you prefer to have the container run in the background:
 
 ``` 
-sudo docker run -i -t -d -v /home/couchbase-server:/opt/couchbase/var \
--p 11210:11210 -p 8091:8091 -p 8092:8092 <yourname>/couchbase-server
+sudo docker run -i -t -d -p 11210:11210 -p 8091:8091 -p 8092:8092 \
+<yourname>/couchbase-server
 ```

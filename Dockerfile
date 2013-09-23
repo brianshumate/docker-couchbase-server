@@ -2,7 +2,7 @@
 #
 # Install Couchbase Server Community Edition (version as per CB_VERSION below)
 #
-# VERSION 0.9.1
+# VERSION 0.9.2
 
 FROM ubuntu
 MAINTAINER Brian Shumate, brian@couchbase.com
@@ -45,6 +45,7 @@ RUN dpkg -i /tmp/$CB_PACKAGE
 EXPOSE 22 4369 8091 8092 11209 11210 11211
 
 # couchbase-script approach (thanks for the ideas Dustin!)
+VOLUME /home/couchbase-server:/opt/couchbase/var
 RUN rm -r /opt/couchbase/var/lib
 ADD bin/couchbase-script /usr/local/sbin/couchbase
 RUN chmod 755 /usr/local/sbin/couchbase
