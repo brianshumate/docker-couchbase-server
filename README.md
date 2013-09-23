@@ -1,7 +1,8 @@
-# docker-couchbase-server
+# Docker Couchbase Server
 
-This is a Dockerfile for running [Couchbase Server](http://couchbase.com/)
-in a [Docker](http://www.docker.io) container.
+This is a Dockerfile and some supporting bits for running
+[Couchbase Server](http://couchbase.com/) in a 
+[Docker](http://www.docker.io) container.
 
 There is a `Vagrantfile` in the `vagrant` directory that is configured to
 prepare an Ubuntu 12.04 VirtualBox host for Docker and the requisite bits
