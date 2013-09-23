@@ -2,7 +2,7 @@
 #
 # Install Couchbase Server Community Edition (version as per CB_VERSION below)
 #
-# VERSION 0.8.8
+# VERSION 0.8.9
 
 FROM ubuntu
 MAINTAINER Brian Shumate, brian@couchbase.com
@@ -24,7 +24,12 @@ RUN sed -i.bak '/\# end of pam-auth-update config/ i\session	required        pam
 RUN locale-gen en_US en_US.UTF-8
 RUN echo 'root:couchbase' | chpasswd
 RUN mkdir -p /var/run/sshd
-RUN mkdir -p /var/log/supervisor
+# RUN mkdir -p /var/log/supervisor
+
+# The initctl hack
+# See: https://github.com/dotcloud/docker/issues/1024
+RUN dpkg-divert --local --rename --add /sbin/initctl
+RUN ln -s /bin/true /sbin/initctl
 
 # Add Universe (for libssl0.9.8 dependency), update & install packages
 RUN sed -i.bak 's/main$/main universe/' /etc/apt/sources.list
