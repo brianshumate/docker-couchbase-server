@@ -2,7 +2,7 @@
 #
 # Install Couchbase Server Community Edition (version as per CB_VERSION below)
 #
-# VERSION 0.9.2
+# VERSION 0.9.3
 
 FROM ubuntu
 MAINTAINER Brian Shumate, brian@couchbase.com
@@ -35,13 +35,11 @@ RUN sed -i.bak 's/main$/main universe/' /etc/apt/sources.list
 RUN apt-get -y update
 RUN apt-get -y install librtmp0 libssl0.9.8 lsb-release openssh-server
 
-# Download Couchbase Server package to /tmp, install & stop service
+# Download Couchbase Server package to /tmp & install
 ADD $CB_DOWNLOAD_URL/$CB_VERSION/$CB_PACKAGE /tmp/$CB_PACKAGE
 RUN dpkg -i /tmp/$CB_PACKAGE
-# RUN /etc/init.d/couchbase-server stop
 
 # Open the OpenSSH server and Couchbase Server ports
-# EXPOSE 22 4369 8091 8092 11209 11210 11211 21100-21199 # in v0.08 if needed
 EXPOSE 22 4369 8091 8092 11209 11210 11211
 
 # couchbase-script approach (thanks for the ideas Dustin!)
