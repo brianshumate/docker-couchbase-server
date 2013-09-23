@@ -2,7 +2,7 @@
 #
 # Install Couchbase Server Community Edition (version as per CB_VERSION below)
 #
-# VERSION 0.8.9
+# VERSION 0.9.0
 
 FROM ubuntu
 MAINTAINER Brian Shumate, brian@couchbase.com
@@ -24,7 +24,6 @@ RUN sed -i.bak '/\# end of pam-auth-update config/ i\session	required        pam
 RUN locale-gen en_US en_US.UTF-8
 RUN echo 'root:couchbase' | chpasswd
 RUN mkdir -p /var/run/sshd
-# RUN mkdir -p /var/log/supervisor
 
 # The initctl hack
 # See: https://github.com/dotcloud/docker/issues/1024
@@ -45,7 +44,7 @@ RUN dpkg -i /tmp/$CB_PACKAGE
 # EXPOSE 22 4369 8091 8092 11209 11210 11211 21100-21199 # in v0.08 if needed
 EXPOSE 22 4369 8091 8092 11209 11210 11211
 
-# couchbase-script approach (thanks for the idea Dustin!)
+# couchbase-script approach (thanks for the ideas Dustin!)
 RUN rm -r /opt/couchbase/var/lib
 ADD couchbase-script /usr/local/sbin/couchbase
 RUN chmod 755 /usr/local/sbin/couchbase
@@ -53,9 +52,10 @@ CMD /usr/local/sbin/couchbase
 
 ##############################################################################
 # The following bits are for using Couchbase Server with supervisord instead
-# Note: WIP
+# Note: This is a WIP and might actually be broken out into a separate file
 ##############################################################################
-# ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+# RUN mkdir -p /var/log/supervisor
+# ADD supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # RUN apt-get -y install supervisor
 # Stop supervisord
 # RUN /etc/init.d/supervisor stop
