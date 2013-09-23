@@ -42,10 +42,8 @@ sudo mkdir /home/couchbase-server
 sudo chown 999:999 /home/couchbase-server
 ```
 
-<div class="alert tip">
-<p>If you use the `Vagrantfile` included in the `vagrant` directory, the
-above 2 steps are performed for you when the box is provisioned.</p>
-</div>
+**NOTE**: If you use the `Vagrantfile` included in the `vagrant` directory,
+the above 2 steps are performed for you when the box is provisioned.
 
 ## Build & Run a Container
 
@@ -59,7 +57,7 @@ The following command will build the container:
 sudo docker build -t <yournmae>/couchbase-server .
 ```
 
-Use a command like the following run the container:
+A command like the following is used to run the container:
   
 ``` 
 sudo docker run -i -t -v /home/couchbase-server:/opt/couchbase/var \

@@ -46,7 +46,7 @@ EXPOSE 22 4369 8091 8092 11209 11210 11211
 
 # couchbase-script approach (thanks for the ideas Dustin!)
 RUN rm -r /opt/couchbase/var/lib
-ADD couchbase-script /usr/local/sbin/couchbase
+ADD bin/couchbase-script /usr/local/sbin/couchbase
 RUN chmod 755 /usr/local/sbin/couchbase
 CMD /usr/local/sbin/couchbase
 
