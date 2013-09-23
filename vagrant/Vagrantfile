@@ -26,11 +26,13 @@ Vagrant::Config.run do |config|
     # it is assumed it won't be explicitly stated.
     if ENV["VAGRANT_DEFAULT_PROVIDER"].nil? && ARGV.none? { |arg| arg.downcase.start_with?("--provider") }
       
-    # Install git + vim and set Docker limits for Couchbase Server
+    # Install git + vim and setup Docker home dir/limits for Couchbase Server
       pkg_cmd << "apt-get install -q -y git vim; " \
         "sed -i.bak '/description     \"Docker daemon\"/ a\\limit nofile        262144 262144' /etc/init/docker.conf; " \
         "sed -i.bak '/description     \"Docker daemon\"/ a\\limit memlock       unlimited unlimited' /etc/init/docker.conf; " \
-        "sed -i.back '/description     \"Docker daemon\"/ a\\# Following 2 lines added by docker-couchbase-server' /etc/init/docker.conf; "
+        "sed -i.back '/description     \"Docker daemon\"/ a\\# Following 2 lines added by docker-couchbase-server' /etc/init/docker.conf; "\
+        "mkdir /home/couchbase-server; "\
+        "chown 999:999 /home/couchbase-server;"
         
       pkg_cmd << "apt-get install -q -y linux-headers-generic-lts-raring dkms; " \
         "echo 'Downloading VBox Guest Additions...'; " \
