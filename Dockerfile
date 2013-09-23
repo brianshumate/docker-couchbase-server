@@ -2,7 +2,7 @@
 #
 # Install Couchbase Server Community Edition (version as per CB_VERSION below)
 #
-# VERSION 0.9.0
+# VERSION 0.9.1
 
 FROM ubuntu
 MAINTAINER Brian Shumate, brian@couchbase.com
