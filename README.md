@@ -48,7 +48,7 @@ The following command will build the container:
 
 ```
 cd docker-couchbase-server
-sudo docker build -t <yournmae>/couchbase-server .
+sudo docker build -t <yourname>/couchbase-server .
 ```
 
 A command like the following is used to run the container:
