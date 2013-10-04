@@ -1,7 +1,7 @@
 # Docker Couchbase Server
 
 This is a Dockerfile and some supporting bits for running
-[Couchbase Server](http://couchbase.com/) in a 
+[Couchbase Server](http://couchbase.com/) in a
 [Docker](http://www.docker.io) container.
 
 There is a `Vagrantfile` in the `vagrant` directory that is configured to
@@ -18,7 +18,7 @@ the number of open files and locked memory available to Couchbase Server
 containers from the Docker host.
 
 To do so, edit `/etc/init/docker.conf` on the Docker host machine, and append
-the following line to the end of the file:
+the following lines to the end of the file:
 
 ```
 limit memlock unlimited unlimited
@@ -52,15 +52,15 @@ sudo docker build -t <yourname>/couchbase-server .
 ```
 
 A command like the following is used to run the container:
-  
-``` 
+
+```
 sudo docker run -i -t  -p 11210:11210 -p 8091:8091 -p 8092:8092 \
 <yourname>/couchbase-server
 ```
 
 or, if you prefer to have the container run in the background:
 
-``` 
+```
 sudo docker run -i -t -d -p 11210:11210 -p 8091:8091 -p 8092:8092 \
 <yourname>/couchbase-server
 ```
