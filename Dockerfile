@@ -2,14 +2,14 @@
 #
 # Install Couchbase Server Community Edition (version as per CB_VERSION below)
 #
-# VERSION 0.9.3
+# VERSION 0.9.4
 
 FROM ubuntu
 MAINTAINER Brian Shumate, brian@couchbase.com
 
-ENV CB_VERSION 2.1.1
+ENV CB_VERSION 2.2.0
 ENV CB_DOWNLOAD_URL http://packages.couchbase.com/releases
-ENV CB_PACKAGE couchbase-server-community_x86_64_$CB_VERSION.deb
+ENV CB_PACKAGE couchbase-server-community_$CB_VERSION_x86_64.deb
 
 # Limits
 RUN sed -i.bak '/\# End of file/ i\\# Following 4 lines added by docker-couchbase-server' /etc/security/limits.conf
@@ -24,11 +24,6 @@ RUN sed -i.bak '/\# end of pam-auth-update config/ i\session	required        pam
 RUN locale-gen en_US en_US.UTF-8
 RUN echo 'root:couchbase' | chpasswd
 RUN mkdir -p /var/run/sshd
-
-# The initctl hack
-# See: https://github.com/dotcloud/docker/issues/1024
-#RUN dpkg-divert --local --rename --add /sbin/initctl
-#RUN ln -s /bin/true /sbin/initctl
 
 # Add Universe (for libssl0.9.8 dependency), update & install packages
 RUN sed -i.bak 's/main$/main universe/' /etc/apt/sources.list
@@ -51,7 +46,8 @@ CMD /usr/local/sbin/couchbase
 
 ##############################################################################
 # The following bits are for using Couchbase Server with supervisord instead
-# Note: This is a WIP and might actually be broken out into a separate file
+# NB: This is a WIP and might actually be broken out into a separate file
+#     or discarded altogether
 ##############################################################################
 # RUN mkdir -p /var/log/supervisor
 # ADD supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
