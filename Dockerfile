@@ -8,8 +8,10 @@ FROM ubuntu
 MAINTAINER Brian Shumate, brian@couchbase.com
 
 ENV CB_VERSION 2.2.0
-ENV CB_DOWNLOAD_URL http://packages.couchbase.com/releases
-ENV CB_PACKAGE couchbase-server-community_$CB_VERSION_x86_64.deb
+ENV CB_BASE_URL http://packages.couchbase.com/releases
+ENV CB_PACKAGE couchbase-server-community_${CB_VERSION}_x86_64.deb
+ENV CB_DOWNLOAD_URL ${CB_BASE_URL}/${CB_VERSION}/${CB_PACKAGE}
+ENV CB_LOCAL_PATH /tmp/${CB_PACKAGE}
 
 # Limits
 RUN sed -i.bak '/\# End of file/ i\\# Following 4 lines added by docker-couchbase-server' /etc/security/limits.conf
@@ -31,8 +33,8 @@ RUN apt-get -y update
 RUN apt-get -y install librtmp0 libssl0.9.8 lsb-release openssh-server
 
 # Download Couchbase Server package to /tmp & install
-ADD $CB_DOWNLOAD_URL/$CB_VERSION/$CB_PACKAGE /tmp/$CB_PACKAGE
-RUN dpkg -i /tmp/$CB_PACKAGE
+ADD $CB_DOWNLOAD_URL $CB_LOCAL_PATH
+RUN dpkg -i $CB_LOCAL_PATH
 
 # Open the OpenSSH server and Couchbase Server ports
 EXPOSE 22 4369 8091 8092 11209 11210 11211
