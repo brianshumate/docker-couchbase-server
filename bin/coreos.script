@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# File: coreos.script — Couchbase Server Docker CoreOS utility script
+# based on work by Dustin Sallings: https://gist.github.com/dustin/6605182
+
+INT=$(ip route | awk '/^default/ { print $5 }')
+ADDR=$(ip route | egrep "^[0-9].*$INT" | awk '{ print $9 }')
+
+mkdir -p /home/core/data/couchbase
+sudo chown 999:999 /home/core/data/couchbase
+
+exec sudo docker run -i -d -t -e DOCKER_EXT_ADDR=$ADDR \
+-v /home/core/data/couchbase:/opt/couchbase/var \
+-p 11210:11210 -p 8091:7081 -p 8092:8092 \
+brianshumate/couchbase_server

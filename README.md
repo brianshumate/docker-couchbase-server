@@ -1,20 +1,15 @@
 # Docker Couchbase Server
 
-This is a Dockerfile and some supporting bits for running
+This is a Dockerfile and supporting scripts for running
 [Couchbase Server](http://couchbase.com/) in a
-[Docker](http://www.docker.io) container.
+[Docker](http://www.docker.com/) container.
 
-**NOTE**: *This project is currently being updated to use the new Docker
-official Mac OS X support*.
-
-There is a `Vagrantfile` in the `vagrant` directory that is configured to
-prepare an Ubuntu 12.04 VirtualBox host for Docker and the requisite bits
-needed by Couchbase Server, such as increasing open file limits and locked
-memory as detailed below. If you use the supplied `Vagrantfile`, the steps
-in the following section will be done for you when you `vagrant up`, and you
-will not need to do them by hand.
 
 ## Prepare Docker Host
+
+If you will be using a CoreOS or Linux based host operating system, there is
+a bit of preparation you must do before launching the Couchbase Server
+containers.
 
 **Note about open file limits and locked memory**: You'll need to increase
 the number of open files and locked memory available to Couchbase Server
@@ -38,18 +33,9 @@ You'll need to restart the Docker daemon or host machine after making the
 above changes. These changes will affect the Docker daemon and all of its
 children, including containers.
 
-To restart the entire Docker host:
+For a Mac OS X host using boot2docker, restart the entire host like this:
 
     boot2docker restart
-
-Prior to building and running the container, you'll need to prepare a
-directory on the Docker host for mapping the Couchbase Server data directory
-if you wish to preserve your data through restarts of the image.
-
-First, `ssh` into the Docker host, the execute the following commands:
-
-    sudo mkdir /home/couchbase-server
-    sudo chown 999:999 /home/couchbase-server
 
 ## Build & Run a Container
 
@@ -61,44 +47,53 @@ Clone this project into the `/home/docker` directory on the Docker host:
 
     git clone https://github.com/brianshumate/docker-couchbase-server.git
 
-Then, execute the following commands to build a container:
-
+Then, execute the following commands to run a container based on this project:
 
     cd docker-couchbase-server
-    sudo docker build -t <yourname>/couchbase-server .
+    INT=`ip route | awk '/^default/ { print $5 }'`
+    ADDR=`ip route | egrep "^[0-9].*$INT" | awk '{ print $9 }'`
+    exec sudo docker run -i -d -t -e DOCKER_EXT_ADDR=$ADDR \
+    -v /home/core/data/couchbase:/opt/couchbase/var \
+    -p 11210:11210 -p 8091:7081 -p 8092:8092 \
+    brianshumate/couchbase_server
 
-A command like the following is used to run the container:
+If your Docker host is running CoreOS, use the included `coreos.script`:
 
-    sudo docker run -i -t  -p 11210:11210 -p 8091:8091 -p 8092:8092 \
-    <yourname>/couchbase-server
-
-or, if you prefer to have the container run in the background:
-
-    sudo docker run -i -t -d -p 11210:11210 -p 8091:8091 -p 8092:8092 \
-    <yourname>/couchbase-server
+    cd docker-couchbase-server
+    exec sudo ./bin/coreos.script
 
 ## Mac OS X Instructions
 
-To use this project on Mac OS X with official Docker support and the
-`boot2docker` tool, follow these instructions:
+Docker is supported on Mac OS X version 10.6 and newer. To learn more about
+official Docker Mac OS X support, consult the
+[Mac OS X installation](http://docs.docker.io/en/latest/installation/mac/)
+documentation.
 
-Install the `boot2docker` script with [Homebrew](http://brew.sh/):
+### Prerequisites
+
+Using Docker and Couchbase Server on OS X requires the free virtual machine
+managements software [VirtualBox](https://www.virtualbox.org/). Please ensure
+that VirtualBox is installed before proceeding.
+
+### boot2docker
+
+To use this project on a Mac OS X based host, the recommended approach is
+to use a [boot2docker](http://boot2docker.io/) TinyCore Linux based
+environment by following these instructions:
+
+Install boot2docker script with [Homebrew](http://brew.sh/):
 
     brew install boot2docker
 
-Learn more about Docker Mac OS X support in the
-[Mac OS X installation](http://docs.docker.io/en/latest/installation/mac/)
-documentation
-
-Once you've installed `boot2docker` you can install the latest Docker 
+Once you've installed boot2docker you can install the latest Docker
 Mac OS X client with Homebrew:
 
     brew install docker
 
-Now initialize and boot the Docker daemon and VM:
+Now, initialize and start the Docker virtual machine:
 
     boot2docker init
-    boot2docker up
+    boot2docker start
 
 Using the Docker client will now work as expected agains the VirtualBox
 based VM host:
@@ -125,3 +120,4 @@ Couchbase Server in a Docker environment.
 * [Running Couchbase Cluster Under Docker](http://tleyden.github.io/blog/2013/11/14/running-couchbase-cluster-under-docker/)
 * [How I built couchbase 2.2 for docker](https://gist.github.com/dustin/6605182)
 * [Couchbase Server / Docker Index](https://index.docker.io/u/dustin/couchbase/)
+

@@ -1,8 +1,54 @@
 #!/bin/sh
- 
-cd /opt/couchbase
+
+# File: couchbase-script — Couchbase Server Docker startup script
+# based on work by Dustin Sallings: https://gist.github.com/dustin/6605182
+
+CB_ADMIN="Administrator"
+CB_ADMIN_PASSWORD="couchbase"
+CB_CLI="/opt/couchbase/bin/couchbase-cli"
+CB_HOME="/opt/couchbase"
+CB_USER="couchbase"
+INT=`ip route | awk '/^default/ { print $5 }'`
+ADDR=`ip route | egrep "^[0-9].*$INT" | awk '{ print $9 }'`
+
+untilsuccess() {
+    "$@"
+    while [ $? -ne 0 ]
+    do
+	    echo Retrying...
+	    sleep 1
+        "$@"
+    done
+}
+
+cd $CB_HOME
 mkdir -p var/lib/couchbase var/lib/couchbase/config var/lib/couchbase/data \
-var/lib/couchbase/stats var/lib/couchbase/logs var/lib/moxi
-chown -R couchbase:couchbase var
+    var/lib/couchbase/stats var/lib/couchbase/logs var/lib/moxi
+chown -R $CB_USER:$CB_USER var
 /etc/init.d/couchbase-server start
-exec /bin/bash
+
+if [ -z "$DOCKER_EXT_ADDR" ]
+then
+    DOCKER_EXT_ADDR="$ADDR"
+fi
+
+if [ -n "$ALPHA_PORT_7081_TCP_ADDR" ]
+then
+    echo "Joining node $ALPHA_PORT_7081_TCP_ADDR"
+    untilsuccess $CB_CLI server-add -c $ALPHA_PORT_7081_TCP_ADDR:8091 \
+      --user=$CB_ADMIN --password=$CB_ADMIN_PASSWORD --server-add=$ADDR:8091
+else
+    echo "Initializing the Couchbase Server cluster"
+
+    untilsuccess $CB_CLI cluster-init \
+      -c 127.0.0.1:8091 --cluster-init-username=$CB_ADMIN \
+      --cluster-init-password=$CB_ADMIN_PASSWORD --cluster-init-ramsize=512
+
+    untilsuccess $CB_CLI bucket-create -c 127.0.0.1:8091 \
+      -u $CB_ADMIN -p $CB_ADMIN_PASSWORD --bucket=default -c localhost:8091 \
+      --bucket-ramsize=128
+fi
+
+echo "{\"$ADDR\": \"$DOCKER_EXT_ADDR\", \"127.0.0.1\": \"$DOCKER_EXT_ADDR\"}" > /tmp/confsed.json
+
+exec /usr/local/sbin/confsed -rewriteconf /tmp/confsed.json http://localhost:8091/
