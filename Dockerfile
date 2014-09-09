@@ -32,9 +32,11 @@ RUN apt-get -y install librtmp0 lsb-release python-httplib2
 # and remove Couchbase Server lib contents
 ADD ${CB_DOWNLOAD_URL} ${CB_LOCAL_PATH}
 RUN dpkg -i ${CB_LOCAL_PATH}
-RUN rm ${CB_LOCAL_PATH}
-RUN /etc/init.d/couchbase-server stop
-RUN rm -r /opt/couchbase/var/lib
+
+# TESTING
+#RUN rm ${CB_LOCAL_PATH}
+#RUN /etc/init.d/couchbase-server stop
+#RUN rm -r /opt/couchbase/var/lib
 
 # FIXME: No longer necessary
 # VOLUME /home/couchbase-server:/opt/couchbase/var
