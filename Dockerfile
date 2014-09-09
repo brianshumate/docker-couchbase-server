@@ -33,14 +33,9 @@ RUN apt-get -y install librtmp0 lsb-release python-httplib2
 ADD ${CB_DOWNLOAD_URL} ${CB_LOCAL_PATH}
 RUN dpkg -i ${CB_LOCAL_PATH}
 
-# TESTING
-#RUN rm ${CB_LOCAL_PATH}
-#RUN /etc/init.d/couchbase-server stop
-#RUN rm -r /opt/couchbase/var/lib
-
 # FIXME: No longer necessary
 # VOLUME /home/couchbase-server:/opt/couchbase/var
-RUN rm -r /opt/couchbase/var/lib
+#RUN rm -r /opt/couchbase/var/lib
 
 # Install Dustin's confsed utility
 ADD http://cbfs-ext.hq.couchbase.com/dustin/software/confsed/confsed.lin64.gz /usr/local/sbin/confsed.gz

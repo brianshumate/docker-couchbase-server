@@ -9,3 +9,8 @@
 ## v1.0.1
 
 - Remove the unnecessary supervisord bits
+- Variable updates
+
+## v1.0.2
+
+- Removed unnecessary steps from Dockerfile
