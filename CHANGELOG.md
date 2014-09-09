@@ -14,3 +14,7 @@
 ## v1.0.2
 
 - Removed unnecessary steps from Dockerfile
+
+## v1.0.3
+
+- Documentation updates

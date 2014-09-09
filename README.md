@@ -7,60 +7,74 @@ This is a Dockerfile and supporting scripts for running
 
 ## Prepare Docker Host
 
-If you will be using a CoreOS or Linux based host operating system, there is
-a bit of preparation you must do before launching the Couchbase Server
-containers.
+Some preparation of the host operating system running the Docker daemon will
+be required prior to launching Docker containers. The exact preparation steps
+differ depending on the OS distribution.
+
+### Debian, Ubuntu, CentOS or RHEL
 
 **Note about open file limits and locked memory**: You'll need to increase
 the number of open files and locked memory available to Couchbase Server
-containers from the Docker host.
+containers on the Docker host.
 
-To do so, first `ssh` into the Docker host machine and ensure that the
-`/etc/init` directory is present:
+To do so, first access a shell on the host machine and create the docker
+daemon initialization file, `/etc/init/docker.conf`:
 
-    sudo mkdir /etc/init
+```
+sudo $EDITOR /etc/init/docker.conf
+```
 
-Next, edit `/etc/init/docker.conf`:
+Then add the following lines to the file:
 
-    sudo $EDITOR /etc/init/docker.conf
+```
+limit memlock unlimited unlimited
+limit nofile 262144 262144
+```
 
-Then, append the following lines to the end of the file:
+You'll need to restart the Docker daemon after making the above changes. These changes will affect the Docker daemon and all of its child processes,
+including containers.
 
-    limit memlock unlimited unlimited
-    limit nofile 262144 262144
+### CoreOS
 
-You'll need to restart the Docker daemon or host machine after making the
-above changes. These changes will affect the Docker daemon and all of its
-children, including containers.
+Information for preparing a CoreOS host system is pending active testing,
+and will be forthcoming.
 
-For a Mac OS X host using boot2docker, restart the entire host like this:
+## Run a Couchbase Server Container
 
-    boot2docker restart
+Now, you can run a Couchbase Server Docker container.
 
-## Build & Run a Container
+If you have not already, clone this project repository to your Docker host:
 
-Now, you can build and run a Couchbase Server Docker container; be sure to
-replace `<yourname>` in the example shown below with your own unique
-identifier.
-
-Clone this project into the `/home/docker` directory on the Docker host:
-
-    git clone https://github.com/brianshumate/docker-couchbase-server.git
+```
+git clone https://github.com/brianshumate/docker-couchbase-server.git
+```
 
 Then, execute the following commands to run a container based on this project:
 
-    cd docker-couchbase-server
-    INT=`ip route | awk '/^default/ { print $5 }'`
-    ADDR=`ip route | egrep "^[0-9].*$INT" | awk '{ print $9 }'`
-    exec sudo docker run -i -d -t -e DOCKER_EXT_ADDR=$ADDR \
-    -v /home/core/data/couchbase:/opt/couchbase/var \
-    -p 11210:11210 -p 8091:7081 -p 8092:8092 \
-    brianshumate/couchbase_server
+```
+cd docker-couchbase-server
+INT=`ip route | awk '/^default/ { print $5 }'`
+ADDR=`ip route | egrep "^[0-9].*$INT" | awk '{ print $9 }'`
+exec sudo docker run -i -d -t -e DOCKER_EXT_ADDR=$ADDR \
+-v /home/core/data/couchbase:/opt/couchbase/var \
+-p 11210:11210 -p 8091:7081 -p 8092:8092 \
+brianshumate/couchbase_server
+```
 
 If your Docker host is running CoreOS, use the included `coreos.script`:
 
-    cd docker-couchbase-server
-    exec sudo ./bin/coreos.script
+```
+cd docker-couchbase-server
+exec sudo ./bin/coreos.script
+```
+
+You can also get a 3 node cluster going with the included
+`multi-node-cluster` script:
+
+```
+cd docker-couchbase-server
+exec sudo ./bin/multi-node-cluster
+```
 
 ## Mac OS X Instructions
 
@@ -71,53 +85,71 @@ documentation.
 
 ### Prerequisites
 
-Using Docker and Couchbase Server on OS X requires the free virtual machine
-managements software [VirtualBox](https://www.virtualbox.org/). Please ensure
-that VirtualBox is installed before proceeding.
+Using Docker and Couchbase Server on OS X with this project requires the free
+virtual machine management software [VirtualBox](https://www.virtualbox.org/).
+Please ensure that VirtualBox is installed on the host machine
+before proceeding with these directions.
 
 ### boot2docker
 
-To use this project on a Mac OS X based host, the recommended approach is
+The recommended approach is for using this project on a Mac OS X based host is
 to use a [boot2docker](http://boot2docker.io/) TinyCore Linux based
-environment by following these instructions:
+environment by following these steps:
 
 Install boot2docker script with [Homebrew](http://brew.sh/):
 
-    brew install boot2docker
+```
+brew install boot2docker
+```
 
 Once you've installed boot2docker you can install the latest Docker
 Mac OS X client with Homebrew:
 
-    brew install docker
+```
+brew install docker
+```
 
 Now, initialize and start the Docker virtual machine:
 
-    boot2docker init
-    boot2docker start
+```
+boot2docker init
+boot2docker start
+```
 
 Using the Docker client will now work as expected agains the VirtualBox
 based VM host:
 
-    docker version
+```
+docker version
+```
 
 You can also easily ssh into the VM:
 
-    boot2docker ssh
+```
+boot2docker ssh
+```
 
 * User name : *root*
 * Password  : *tcuser*
 
 Once you've established the Docker host, you can follow the directions under
-**Prepare Docker Host** and **Build & Run a Container** to get the project
+**Prepare Docker Host** and **Run a Container** sections to get the project
 up and running.
 
+## Contributing
+
+If you'd like to contribute to this project, your help would be most welcome:
+
+* [File an issue](https://github.com/brianshumate/docker-couchbase-server/issues)
+* Submit a pull request
+* Provide random acts of friendly encouragement
 
 ## Resources
 
 The following are some additional handy resources related to operating
-Couchbase Server in a Docker environment.
+Couchbase Server in a Docker environment and some were inspirational for this
+project. Thanks to these fine folks and their projects:
 
-* [Running Couchbase Cluster Under Docker](http://tleyden.github.io/blog/2013/11/14/running-couchbase-cluster-under-docker/)
 * [How I built couchbase 2.2 for docker](https://gist.github.com/dustin/6605182)
 * [Couchbase Server / Docker Index](https://index.docker.io/u/dustin/couchbase/)
-
+* [Couchbase Docker container](https://github.com/ncolomer/docker-templates/tree/master/couchbase)
