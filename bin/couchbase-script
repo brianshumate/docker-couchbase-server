@@ -5,9 +5,19 @@
 
 CB_ADMIN="Administrator"
 CB_ADMIN_PASSWORD="couchbase"
+CB_BUCKET="default"
 CB_CLI="/opt/couchbase/bin/couchbase-cli"
 CB_HOME="/opt/couchbase"
+CB_HOST="127.0.0.1"
 CB_USER="couchbase"
+CB_CONFIG_DIR="$CB_HOME/var/lib/couchbase/config"
+CB_DATA_DIR="$CB_HOME/var/lib/couchbase/data"
+CB_LIB_DIR="$CB_HOME/var/lib/couchbase"
+CB_STATS_DIR="$CB_HOME/var/lib/couchbase/stats"
+CB_LOG_DIR="$CB_HOME/var/lib/couchbase/logs"
+CB_MOXI_DIR="$CB_HOME/var/lib/moxi"
+CB_VAR_DIR="$CB_HOME/var"
+
 INT=`ip route | awk '/^default/ { print $5 }'`
 ADDR=`ip route | egrep "^[0-9].*$INT" | awk '{ print $9 }'`
 
@@ -21,10 +31,10 @@ untilsuccess() {
     done
 }
 
-cd $CB_HOME
-mkdir -p var/lib/couchbase var/lib/couchbase/config var/lib/couchbase/data \
-    var/lib/couchbase/stats var/lib/couchbase/logs var/lib/moxi
-chown -R $CB_USER:$CB_USER var
+mkdir -p $CB_LIB_DIR $CB_CONFIG_DIR $CB_DATA_DIR $CB_LIB_DIR $CB_STATS_DIR \
+$CB_LOG_DIR $CB_MOXI_DIR
+chown -R $CB_USER:$CB_USER $CB_VAR_DIR
+
 /etc/init.d/couchbase-server start
 
 if [ -z "$DOCKER_EXT_ADDR" ]
@@ -44,11 +54,11 @@ else
       -c 127.0.0.1:8091 --cluster-init-username=$CB_ADMIN \
       --cluster-init-password=$CB_ADMIN_PASSWORD --cluster-init-ramsize=512
 
-    untilsuccess $CB_CLI bucket-create -c 127.0.0.1:8091 \
-      -u $CB_ADMIN -p $CB_ADMIN_PASSWORD --bucket=default -c localhost:8091 \
+    untilsuccess $CB_CLI bucket-create -c $CB_HOST:8091 \
+      -u $CB_ADMIN -p $CB_ADMIN_PASSWORD --bucket=default -c $CB_HOST:8091 \
       --bucket-ramsize=128
 fi
 
-echo "{\"$ADDR\": \"$DOCKER_EXT_ADDR\", \"127.0.0.1\": \"$DOCKER_EXT_ADDR\"}" > /tmp/confsed.json
+echo "{\"$ADDR\": \"$DOCKER_EXT_ADDR\", \"$CB_HOST\": \"$DOCKER_EXT_ADDR\"}" > /tmp/confsed.json
 
-exec /usr/local/sbin/confsed -rewriteconf /tmp/confsed.json http://localhost:8091/
+exec /usr/local/sbin/confsed -rewriteconf /tmp/confsed.json http://$CB_HOST:8091/

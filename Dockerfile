@@ -30,9 +30,9 @@ RUN apt-get -y install librtmp0 lsb-release python-httplib2
 
 # Download Couchbase Server package to /tmp & install, stop service
 # and remove Couchbase Server lib contents
-ADD $CB_DOWNLOAD_URL $CB_LOCAL_PATH
-RUN dpkg -i $CB_LOCAL_PATH
-RUN rm $CB_LOCAL_PATH
+ADD ${CB_DOWNLOAD_URL} ${CB_LOCAL_PATH}
+RUN dpkg -i ${CB_LOCAL_PATH}
+RUN rm ${CB_LOCAL_PATH}
 RUN /etc/init.d/couchbase-server stop
 RUN rm -r /opt/couchbase/var/lib
 
