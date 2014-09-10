@@ -152,4 +152,5 @@ project. Thanks to these fine folks and their projects:
 
 * [How I built couchbase 2.2 for docker](https://gist.github.com/dustin/6605182)
 * [Couchbase Server / Docker Index](https://index.docker.io/u/dustin/couchbase/)
+* [Running Couchbase Cluster Under Docker](http://tleyden.github.io/blog/2013/11/14/running-couchbase-cluster-under-docker/)
 * [Couchbase Docker container](https://github.com/ncolomer/docker-templates/tree/master/couchbase)

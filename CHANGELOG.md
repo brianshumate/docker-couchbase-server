@@ -18,3 +18,7 @@
 ## v1.0.3
 
 - Documentation updates
+
+## v1.0.4
+
+- Documentation updates
