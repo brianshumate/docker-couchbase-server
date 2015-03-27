@@ -4,6 +4,14 @@ This is a Dockerfile and supporting scripts for running
 [Couchbase Server](http://couchbase.com/) in a
 [Docker](http://www.docker.com/) container.
 
+Originally a personal research project, this project has been superseded by
+official Docker related resources described below.
+
+**NOTE**: These are official Couchbase Server Docker resources
+which you should use instead of this project:
+
+* [Run Couchbase Server under Docker + CoreOS](https://github.com/couchbaselabs/couchbase-server-docker)
+* [Dockerfiles and configuration scripts for the Docker Hub Official Couchbase images](https://github.com/couchbase/docker)
 
 ## Prepare Docker Host
 
@@ -136,20 +144,15 @@ Once you've established the Docker host, you can follow the directions under
 **Prepare Docker Host** and **Run a Container** sections to get the project
 up and running.
 
-## Contributing
-
-If you'd like to contribute to this project, your help would be most welcome:
-
-* [File an issue](https://github.com/brianshumate/docker-couchbase-server/issues)
-* Submit a pull request
-* Provide random acts of friendly encouragement
-
 ## Resources
 
 The following are some additional handy resources related to operating
 Couchbase Server in a Docker environment and some were inspirational for this
 project. Thanks to these fine folks and their projects:
 
+* [Run Couchbase Server under Docker + CoreOS](https://github.com/couchbaselabs/couchbase-server-docker)
+* [Dockerfiles and configuration scripts for the Docker Hub Official Couchbase images](https://github.com/couchbase/docker)
+* [Running Couchbase Cluster Under CoreOS on AWS](http://tleyden.github.io/blog/2014/11/01/running-couchbase-cluster-under-coreos-on-aws/)
 * [How I built couchbase 2.2 for docker](https://gist.github.com/dustin/6605182)
 * [Couchbase Server / Docker Index](https://index.docker.io/u/dustin/couchbase/)
 * [Running Couchbase Cluster Under Docker](http://tleyden.github.io/blog/2013/11/14/running-couchbase-cluster-under-docker/)

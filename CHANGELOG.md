@@ -22,3 +22,7 @@
 ## v1.0.4
 
 - Documentation updates
+
+## v1.0.5
+
+- References to official projects and other resources
