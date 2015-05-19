@@ -149,8 +149,7 @@ up and running.
 ## Resources
 
 The following are some additional handy resources related to operating
-Couchbase Server in a Docker environment and some were inspirational for this
-project. Thanks to these fine folks and their projects:
+Couchbase Server in a Docker environment:
 
 * [Run Couchbase Server under Docker + CoreOS](https://github.com/couchbaselabs/couchbase-server-docker)
 * [Dockerfiles and configuration scripts for the Docker Hub Official Couchbase images](https://github.com/couchbase/docker)

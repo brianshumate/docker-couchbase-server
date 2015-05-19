@@ -25,4 +25,9 @@
 
 ## v1.0.5
 
-- References to official projects and other resources
+- References to projects and other resources
+
+## v1.0.6
+
+- Updated Couchbase Server version
+- Bleh and etc.
