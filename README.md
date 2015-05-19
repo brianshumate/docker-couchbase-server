@@ -10,8 +10,10 @@ official Docker related resources described below.
 **NOTE**: These are official Couchbase Server Docker resources
 which you should use instead of this project:
 
-* [Run Couchbase Server under Docker + CoreOS](https://github.com/couchbaselabs/couchbase-server-docker)
+* [Couchbase Docker image on dockerhub](https://hub.docker.com/u/couchbase/server)
 * [Dockerfiles and configuration scripts for the Docker Hub Official Couchbase images](https://github.com/couchbase/docker)
+* [Run Couchbase Server under Docker + Kubernetes](https://github.com/tleyden/couchbase-kubernetes)
+* [Run Couchbase Server under Docker + CoreOS](https://github.com/couchbaselabs/couchbase-server-coreos)
 
 ## Prepare Docker Host
 
