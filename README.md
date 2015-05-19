@@ -7,8 +7,7 @@ This is a Dockerfile and supporting scripts for running
 Originally a personal research project, this project has been superseded by
 official Docker related resources described below.
 
-**NOTE**: These are official Couchbase Server Docker resources
-which you should use instead of this project:
+**NOTE** You might want to consider these alternative projects:
 
 * [Couchbase Docker image on dockerhub](https://hub.docker.com/u/couchbase/server)
 * [Dockerfiles and configuration scripts for the Docker Hub Official Couchbase images](https://github.com/couchbase/docker)
@@ -46,8 +45,7 @@ including containers.
 
 ### CoreOS
 
-Information for preparing a CoreOS host system is pending active testing,
-and will be forthcoming.
+This project will not be supporting CoreOS in its current form.
 
 ## Run a Couchbase Server Container
 
