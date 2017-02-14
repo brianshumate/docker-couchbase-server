@@ -31,3 +31,8 @@
 
 - Updated Couchbase Server version
 - Bleh and etc.
+
+## v1.1.0
+
+- Updated Dockerfile (and verified Consul service registration)
+- Updated documentation

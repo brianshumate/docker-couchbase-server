@@ -2,12 +2,12 @@
 #
 # Install Couchbase Server Community Edition (version as per CB_VERSION below)
 #
-# VERSION 1.0.6
+# VERSION 1.1.0
 
 FROM ubuntu
 MAINTAINER Brian Shumate, brian@brianshumate.com
 
-ENV CB_VERSION 3.0.1
+ENV CB_VERSION 4.5.0
 ENV CB_BASE_URL http://packages.couchbase.com/releases
 ENV CB_PACKAGE couchbase-server-community_${CB_VERSION}-ubuntu12.04_amd64.deb
 ENV CB_DOWNLOAD_URL ${CB_BASE_URL}/${CB_VERSION}/${CB_PACKAGE}
@@ -22,15 +22,19 @@ RUN sed -i.bak '/\# End of file/ i\\*                soft    nofile          655
 RUN sed -i.bak '/\# end of pam-auth-update config/ i\\# Following line was added by docker-couchbase-server' /etc/pam.d/common-session
 RUN sed -i.bak '/\# end of pam-auth-update config/ i\session	required        pam_limits.so\n' /etc/pam.d/common-session
 
+# Packages
+RUN apt-get update && apt-get install -y \
+    git \
+    python
+#ADD http://cbfs-ext.hq.couchbase.com/dustin/software/confsed/confsed.lin64.gz /usr/local/sbin/confsed.gz
+#RUN gzip -d /usr/local/sbin/confsed.gz
+#RUN chmod 755 /usr/local/sbin/confsed
+
 # Locale and supporting utility commands
 RUN locale-gen en_US en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
 RUN echo 'root:couchbase' | chpasswd
 RUN mkdir -p /var/run/sshd
-
-# Add Universe (for libssl0.9.8 dependency), update & install packages
-# RUN sed -i.bak 's/main$/main universe/' /etc/apt/sources.list
-# RUN apt-get -y update
-# RUN apt-get -y install librtmp0 libssl0.9.8 lsb-release openssh-server
 
 # Download Couchbase Server package to /tmp & install
 ADD $CB_DOWNLOAD_URL $CB_LOCAL_PATH

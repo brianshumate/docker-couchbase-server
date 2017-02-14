@@ -59,6 +59,7 @@ else
       --bucket-ramsize=128
 fi
 
-echo "{\"$ADDR\": \"$DOCKER_EXT_ADDR\", \"$CB_HOST\": \"$DOCKER_EXT_ADDR\"}" > /tmp/confsed.json
+# Is this still required?
+#echo "{\"$ADDR\": \"$DOCKER_EXT_ADDR\", \"$CB_HOST\": \"$DOCKER_EXT_ADDR\"}" > /tmp/confsed.json
 
-exec /usr/local/sbin/confsed -rewriteconf /tmp/confsed.json http://$CB_HOST:8091/
+#exec /usr/local/sbin/confsed -rewriteconf /tmp/confsed.json http://$CB_HOST:8091/

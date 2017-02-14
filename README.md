@@ -1,11 +1,11 @@
-# Docker Couchbase Server
+# Couchbase Server on Docker Containers
 
 This is a Dockerfile and supporting scripts for running
 [Couchbase Server](http://couchbase.com/) in a
 [Docker](http://www.docker.com/) container.
 
-Originally a personal research project, this project has been superseded by
-official Docker related resources described below.
+Originally a personal research project, this project has been superseded
+by official Docker related resources described below.
 
 **NOTE** You might want to consider these alternative projects:
 
@@ -16,8 +16,8 @@ official Docker related resources described below.
 
 ## Prepare Docker Host
 
-Some preparation of the host operating system running the Docker daemon will
-be required prior to launching Docker containers. The exact preparation steps
+Some preparation of the host operating system running the Docker daemon is
+required prior to launching Docker containers. The exact preparation steps
 differ depending on the OS distribution.
 
 ### Debian, Ubuntu, CentOS or RHEL
@@ -57,16 +57,17 @@ If you have not already, clone this project repository to your Docker host:
 git clone https://github.com/brianshumate/docker-couchbase-server.git
 ```
 
-Then, execute the following commands to run a container based on this project:
+Then, use the following commands to run a container based on this project:
 
 ```
 cd docker-couchbase-server
 INT=`ip route | awk '/^default/ { print $5 }'`
 ADDR=`ip route | egrep "^[0-9].*$INT" | awk '{ print $9 }'`
 exec sudo docker run -i -d -t -e DOCKER_EXT_ADDR=$ADDR \
+-e "SERVICE_NAME=couchbase-server" -e "SERVICE_TAGS=couchbase" \
 -v /home/core/data/couchbase:/opt/couchbase/var \
 -p 11210:11210 -p 8091:7081 -p 8092:8092 \
-brianshumate/couchbase_server
+jbs_cb:dockerfile
 ```
 
 If your Docker host is running CoreOS, use the included `coreos.script`:
@@ -84,65 +85,28 @@ cd docker-couchbase-server
 exec sudo ./bin/multi-node-cluster
 ```
 
-## Mac OS X Instructions
+## macOS Instructions
 
-Docker is supported on Mac OS X version 10.6 and newer. To learn more about
-official Docker Mac OS X support, consult the
-[Mac OS X installation](http://docs.docker.io/en/latest/installation/mac/)
-documentation.
+Docker is nativelt supported on macOS. To learn more about official Docker
+macOS support, consult the 
+[Docker for Mac documentation](https://docs.docker.com/docker-for-mac/).
 
-### Prerequisites
-
-Using Docker and Couchbase Server on OS X with this project requires the free
-virtual machine management software [VirtualBox](https://www.virtualbox.org/).
-Please ensure that VirtualBox is installed on the host machine
-before proceeding with these directions.
-
-### boot2docker
-
-The recommended approach is for using this project on a Mac OS X based host is
-to use a [boot2docker](http://boot2docker.io/) TinyCore Linux based
-environment by following these steps:
-
-Install boot2docker script with [Homebrew](http://brew.sh/):
+Build the `Dockerfile`:
 
 ```
-brew install boot2docker
+git clone https://github.com/brianshumate/docker-couchbase-server
+cd docker-couchbase-server
+docker build -t "brianshumate_cb:dockerfile" .
 ```
 
-Once you've installed boot2docker you can install the latest Docker
-Mac OS X client with Homebrew:
+Run it (optionally with `SERVICE_NAME` and `SERVICE_TAGS` for Consul:
 
 ```
-brew install docker
+docker run -i -d -t -v $HOME/tmp/couchbase:/opt/couchbase/var \
+-e "SERVICE_NAME=couchbase-server" -e "SERVICE_TAGS=couchbase" \
+-p 11210:11210 -p 8091:7081 -p 8092:8092 \
+--rm brianshumate_cb:dockerfile
 ```
-
-Now, initialize and start the Docker virtual machine:
-
-```
-boot2docker init
-boot2docker start
-```
-
-Using the Docker client will now work as expected agains the VirtualBox
-based VM host:
-
-```
-docker version
-```
-
-You can also easily ssh into the VM:
-
-```
-boot2docker ssh
-```
-
-* User name : *root*
-* Password  : *tcuser*
-
-Once you've established the Docker host, you can follow the directions under
-**Prepare Docker Host** and **Run a Container** sections to get the project
-up and running.
 
 ## Resources
 
